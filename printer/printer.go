@@ -13,7 +13,7 @@ func Print(s string)   string{
 	return s ;
 }
 
-// will print the content of the string to stdou and the LF
+// will print the content of the string to stdou and then LF
 func Println(s string)  string{
 	newString := s + "\n"
 	_, err := writeStdout([]byte(newString))
@@ -39,7 +39,7 @@ func WriteTo(filename string, data [] byte, mode os.FileMode ){
 	}
 }
 
-// Makes orcPrint a io.Writer
+// Makes gconsole.printer a io.Writer
 //when call writes to stdout
 func Write(data []byte) (int, error) {
 	n, err := writeStdout(data);

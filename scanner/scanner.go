@@ -3,6 +3,7 @@ package scanner
 import (
 	"os"
 )
+
 // Get the user input from console and retun as s string
 func Get() string{
 	s :=os.Stdin
