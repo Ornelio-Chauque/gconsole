@@ -20,7 +20,6 @@ func Get() string {
 		n,err = s.Read(buff)
 		if err != nil {
 			panic(" something unexpected happens, can't read from stdio")
-			break
 		}
 		inputResult.Write(buff[:n])
 		if n < BUFFER_SIZE{
