@@ -7,7 +7,7 @@ import (
 
 func TestPrintStringToStdout(t *testing.T) {
 	s := "Hello Word"
-	result := Print(s)
+	result, _ := Print(s)
 
 	if result != s {
 		t.Errorf("expect %s, and found %s", s, result)
