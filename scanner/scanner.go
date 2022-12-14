@@ -1,6 +1,7 @@
 package scanner
 
 import (
+	"fmt"
 	"os"
 	"strings"
 )
@@ -8,20 +9,23 @@ const (
 	BUFFER_SIZE = 256// set a fixed buffer size, to allow better use of memory
 )
 // Get the user input from console and retun as s string
-func Get() string {
+func Get() (string, error) {
 	s := os.Stdin
 	buff := make([]byte, BUFFER_SIZE)
 	defer s.Close()
     var err error;
-	var inputResult strings.Builder
+	var inputResultBuilder strings.Builder
 
 	for n:=0; err == nil;{
 		
 		n,err = s.Read(buff)
 		if err != nil {
-			panic(" something unexpected happens, can't read from stdio")
+			return "", fmt.Errorf("on Get: %w", err)
 		}
-		inputResult.Write(buff[:n])
+		inputResultBuilder.Write(buff[:n])
+		
+		//When the number of byte written to buff (c) is less than the overall buff capacity (BUFFER_SIZE),
+		// means no more bytes reamins to be read, so break the loop
 		if n < BUFFER_SIZE{
 			break
 		}
@@ -29,11 +33,11 @@ func Get() string {
 
 	}
 	
-	return inputResult.String()
+	return inputResultBuilder.String(), nil
 }
 
 //GetBytes return the  slice of byte representation of content read from Stdin
-func GetBytes() []byte {
+func GetBytes() ([]byte, error) {
 	s := os.Stdin
 	buff := make([]byte, BUFFER_SIZE)
 	defer s.Close()
@@ -44,10 +48,12 @@ func GetBytes() []byte {
 		
 		n,err = s.Read(buff)
 		if err != nil {
-			panic(" something unexpected happens, can't read from stdio")
+			return nil, fmt.Errorf("on GetBytes: %w", err)
 		}
 	
 		inputResult = append(inputResult, buff...)
+		//When the number of byte written to buff (c) is less than the overall buff capacity (BUFFER_SIZE),
+		// means no more bytes reamins to be read, so break the loop
 		if n < BUFFER_SIZE{
 			break
 		}
@@ -55,6 +61,6 @@ func GetBytes() []byte {
 
 	}
 	
-	return inputResult
+	return inputResult, nil
 }
 
