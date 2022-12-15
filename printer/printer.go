@@ -1,27 +1,28 @@
 package printer
 
 import (
+	"fmt"
 	"os"
 )
 
 // Will print the content of string to the stdout
-func Print(s string) string {
+func Print(s string) (string, error) {
 	_, err := writeStdout([]byte(s))
 	if err != nil {
-		panic(" Problem writing to stdout")
+		return "", fmt.Errorf("on printer.Print: %w", err)
 	}
-	return s
+	return s, nil
 }
 
 // will print the content of the string to stdou and then LF
-func Println(s string) string {
+func Println(s string) (string, error) {
 	newString := s + "\n"
 	_, err := writeStdout([]byte(newString))
 	if err != nil {
-		panic(" Problem writing to stdout")
+		return "", fmt.Errorf("on printer.Println: %w", err)
 	}
 
-	return s
+	return s, nil
 }
 
 func Printf(format string, args ...string) {
@@ -29,14 +30,19 @@ func Printf(format string, args ...string) {
 }
 
 // write the content to the specified file name
-func WriteTo(filename string, data []byte, mode os.FileMode) {
+func WriteTo(filename string, data []byte, mode os.FileMode) error {
 
-	f := processFile(filename, mode)
-	defer f.Close()
-	_, err := write(f, data)
-	if err != nil {
-		panic(" we find issue writing to this file")
+	f, err := processFile(filename, mode)
+	if err != nil{
+		return err
 	}
+	defer f.Close()
+	
+	_, err = write(f, data)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Makes gconsole.printer a io.Writer
@@ -59,11 +65,11 @@ func write(f *os.File, data []byte) (int, error) {
 
 // Helper function which make a syscal to open a file with read and write mode if exist
 //if don't exist creates the file
-func processFile(filename string, mode os.FileMode) *os.File {
+func processFile(filename string, mode os.FileMode) (*os.File, error) {
 
 	f, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, mode)
 	if err != nil {
-		panic(" expecting filename not filepath") //TODO: impprove error mesage
+		return nil, fmt.Errorf("in printer.processprocessFile: %w", err)
 	}
-	return f
+	return f, nil
 }

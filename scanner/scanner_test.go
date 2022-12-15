@@ -9,3 +9,7 @@ func TestHello (t *testing.T){
 		t.Error("error")
 	}
 }
+
+func TestGet (t *testing.T){
+	
+}
